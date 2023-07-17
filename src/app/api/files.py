@@ -44,16 +44,13 @@ async def upload_file(
 
     return await service.create_file(report_id, f"{filename}.{format}", contents)
 
-@router.get("/{report_id}", response_model=Optional[List[File]])
+@router.get("/", response_model=Optional[List[File]])
 async def get_files(
         report_id: str,
         user: User = Depends(get_current_user),
         service: ReportsService = Depends(get_report_service)
 ):
     """Просмотр отчетов по объекту"""
-    report = await service.get(report_id)
-    if report.user_id != user.id and not user.is_superuser:
-        raise exception_right
     return await service.get_files(report_id=report_id)
 
 @router.delete('/', status_code=status.HTTP_204_NO_CONTENT)
