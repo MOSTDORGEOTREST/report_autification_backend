@@ -47,9 +47,9 @@
 
 ## Пример запроса:
 
-`def request_qr(data):
+```def request_qr(data):
     with requests.Session() as sess:
-        sess.post('https://georeport.ru/auth/sign-in/',
+        sess.post("https://georeport.ru/auth/sign-in/",
                   data={
                       "username": "trial",
                       "password": "trial",
@@ -69,5 +69,6 @@
 
         with open(qr_path, "wb") as file:
             file.write(response.content)
-        return (True, qr_path)`
+        return (True, qr_path)
+        ```
 
