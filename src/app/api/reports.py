@@ -4,15 +4,14 @@ from datetime import date
 from typing import Optional, List
 import hashlib
 import os
-from services.qr_generator import gen_qr_code
 
+from services.qr_generator import gen_qr_code
 from models.reports import Report, ReportCreate, ReportUpdate
-from models.users import User, LicenseLevel
-from services.users import get_current_user, UsersService
-from services.depends import get_report_service, get_users_service
+from models.users import User
+from services.users import get_current_user
+from services.depends import get_report_service
 from services.reports import ReportsService
-from modules.exceptions import exception_active, exception_license, exception_limit, exception_right, exception_file_count, \
-    exception_file_size
+from modules.exceptions import exception_active, exception_license, exception_limit, exception_right
 
 router = APIRouter(
     prefix="/reports",
@@ -47,7 +46,7 @@ async def create_report(
     except HTTPException:
         return await service.create(report_id=id, user_id=user.id, report_data=report_data)
 
-@router.post("/qr")
+@router.post("/qr/")
 def create_qr(
         id: str, user:
         User = Depends(get_current_user)
@@ -62,7 +61,7 @@ def create_qr(
 
     return StreamingResponse(file, media_type="image/png")
 
-@router.post("/report_and_qr")
+@router.post("/report_and_qr/")
 async def create_report_and_qr(
         report_data: ReportCreate,
         user: User = Depends(get_current_user),
@@ -124,7 +123,7 @@ async def delete_report(
     await service.delete(id=id)
     return Response(status_code=status.HTTP_204_NO_CONTENT)
 
-@router.get("/objects/{object_number}", response_model=Optional[List[Report]])
+@router.get("/objects/{object_number}/", response_model=Optional[List[Report]])
 async def get_object(
         object_number: str,
         user: User = Depends(get_current_user),
@@ -141,7 +140,7 @@ async def get_objects(
     """Просмотр всех объектов пользователя"""
     return await service.get_objects(user_id=user.id)
 
-@router.post("/objects/{object_number}/{activate}")
+@router.post("/objects/{object_number}/{activate}/")
 async def activate_deactivate_object(
         object_number: str, active: bool,
         user: User = Depends(get_current_user),
@@ -156,7 +155,7 @@ async def activate_deactivate_object(
         await service.update_many(id=report.id, reports=reports)
     return {"massage": f"{len(reports)} reports from object {object_number} is {'activate' if active else 'deactivate'}"}
 
-@router.get("/count")
+@router.get("/count/")
 async def count(
         service: ReportsService = Depends(get_report_service)
 ):

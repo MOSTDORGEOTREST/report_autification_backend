@@ -2,14 +2,13 @@ from fastapi import APIRouter, Depends, Response, status, UploadFile
 from typing import Optional, List
 import sys
 
-from models.files import FileCreate, File
+from models.files import File
 from models.users import User, LicenseLevel
-from services.users import get_current_user, UsersService
-from services.depends import get_report_service, get_users_service
+from services.users import get_current_user
+from services.depends import get_report_service
 from services.reports import ReportsService
 from config import configs
-from modules.exceptions import exception_active, exception_license, exception_limit, exception_right, exception_file_count, \
-    exception_file_size
+from modules.exceptions import exception_right, exception_file_count, exception_file_size
 
 router = APIRouter(
     prefix="/files",

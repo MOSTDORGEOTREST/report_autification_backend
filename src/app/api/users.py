@@ -1,11 +1,12 @@
-from fastapi import APIRouter, Depends, status, Response, HTTPException
+from fastapi import APIRouter, Depends, status, Response
+from fastapi.security import OAuth2PasswordRequestForm
 from fastapi.responses import JSONResponse
 from typing import List
+
 from models.users import UserCreate, Token, User, UserUpdate, LicenseUpdate, LicenseLevel
 from services.users import UsersService, get_current_user
 from services.depends import get_report_service
 from services.reports import ReportsService
-from fastapi.security import OAuth2PasswordRequestForm
 from services.depends import get_users_service
 from modules.exceptions import exception_right
 
@@ -97,7 +98,7 @@ async def update_user(
         raise exception_right
     return await auth_service.update(id=id, user_data=user_data)
 
-@router.get('/report_counts')
+@router.get('/report_counts/')
 async def get_counts(
         month: int,
         year: int,
@@ -116,7 +117,7 @@ async def get_counts(
         reports_data[user.id] = data
     return reports_data
 
-@router.put("/license", response_model=LicenseUpdate)
+@router.put("/license/", response_model=LicenseUpdate)
 async def update_license(
         user_id: int,
         license_data: LicenseUpdate,

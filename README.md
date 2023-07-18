@@ -25,6 +25,9 @@
 3. Запуск через docker-compose:\
     `docker-compose -f docker-compose-dev.yml up`
 
+4. Запуск тестов:\
+    `docker-compose exec web pytest .`
+
 ## Деплой:
 ~/ = папка проекта 
 
@@ -47,7 +50,19 @@
 
 ## Пример запроса:
 
-```def request_qr(data):
+```
+data = {
+    "object_number": "test",
+    "laboratory_number": "test",
+    "test_type": "test",
+    "data": {
+        "test": "test"
+    },
+    "active": True
+}
+
+
+def request_qr(data):
     with requests.Session() as sess:
         sess.post("https://georeport.ru/auth/sign-in/",
                   data={
@@ -69,6 +84,5 @@
 
         with open(qr_path, "wb") as file:
             file.write(response.content)
-        return (True, qr_path)
-        ```
+        return (True, qr_path)```
 
