@@ -6,6 +6,7 @@ from sqlalchemy.future import select
 from sqlalchemy import update, delete, func
 from sqlalchemy.sql.expression import func as expression_func
 from sqlalchemy.orm import Session
+from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.sql import extract
 #import redis
 #import pickle
@@ -179,18 +180,34 @@ class ReportsService:
         await self.session.commit()
 
     async def create(self, user_id: str, report_id: str, report_data: ReportCreate) -> tables.Reports:
-        report = tables.Reports(
+        #report = tables.Reports(
+            #**report_data.dict(),
+            #id=report_id,
+            #datetime=datetime.datetime.now(),
+            #user_id=user_id)
+        #self.session.add(report)
+
+        stmt = insert(tables.Reports).values(
             **report_data.dict(),
             id=report_id,
             datetime=datetime.datetime.now(),
             user_id=user_id)
-        self.session.add(report)
+
+        stmt = stmt.on_conflict_do_update(
+            index_elements=['id'],
+            set_=stmt.excluded
+        )
+        await self.session.execute(stmt)
         await self.session.commit()
 
         #rds.set(report_id, pickle.dumps(report, protocol=pickle.HIGHEST_PROTOCOL))
         #rds.expire(report_id, 20*60)
 
-        return report
+        return tables.Reports(
+            **report_data.dict(),
+            id=report_id,
+            datetime=datetime.datetime.now(),
+            user_id=user_id)
 
     async def create_qr(self, user_id: str, laboratory_number: str, test_type: str,
                      report_data: ReportCreate):
@@ -202,7 +219,6 @@ class ReportsService:
         path_to_download = os.path.join("static/images", "digitrock_qr.png")  # Путь до фона qr кода
 
         return gen_qr_code(text, path_to_download)
-
 
 
     async def get_files(self, report_id: str) -> Optional[tables.Files]:
