@@ -21,7 +21,7 @@ def create_ip_ports_array(ip: str, *ports):
 app = FastAPI(
     title="Georeport MDGT",
     description="Сервис аутентификации протоколов испытаний",
-    version="2.1.1")
+    version="2.1.2")
 
 origins = [
     "http://localhost:3000",
