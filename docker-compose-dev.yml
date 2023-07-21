@@ -38,6 +38,18 @@ services:
       - 5432
     restart: unless-stopped
 
+  redis:
+    image: "redis:alpine"
+    #command: redis-server --requirepass sOmE_sEcUrE_pAsS
+    ports:
+      - "6379:6379"
+    #volumes:
+    #  - $PWD/redis-data:/var/lib/redis
+    #  - $PWD/redis.conf:/usr/local/etc/redis/redis.conf
+    restart: always
+    environment:
+      - REDIS_REPLICATION_MODE=master
+
   web:
     build: ./src
     command: bash -c 'while !</dev/tcp/db/5432; do sleep 15; done; uvicorn main:app --host 0.0.0.0'

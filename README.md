@@ -26,7 +26,7 @@
     `docker-compose -f docker-compose-dev.yml up`
 
 4. Запуск тестов:\
-    `docker-compose exec web pytest .`
+    `docker-compose exec web pytest . -v`
 
 ## Деплой:
 ~/ = папка проекта 
