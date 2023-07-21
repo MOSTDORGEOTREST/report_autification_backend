@@ -4,6 +4,7 @@ from datetime import date
 from typing import Optional, List
 import hashlib
 import os
+from fastapi_cache.decorator import cache
 
 from services.qr_generator import gen_qr_code
 from models.reports import Report, ReportCreate, ReportUpdate
@@ -18,6 +19,7 @@ router = APIRouter(
     tags=['reports'])
 
 @router.get("/", response_model=Report)
+@cache(expire=60)
 async def get_report(id: str, service: ReportsService = Depends(get_report_service)):
     """Просмотр данных отчета по id"""
     return await service.get(id)
@@ -148,6 +150,7 @@ async def activate_deactivate_object(
     return {"massage": f"{len(reports)} reports from object {object_number} is {'activate' if active else 'deactivate'}"}
 
 @router.get("/count/")
+@cache(expire=60)
 async def count(
         service: ReportsService = Depends(get_report_service)
 ):

@@ -4,6 +4,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from passlib.hash import bcrypt
 from sqlalchemy.future import select
 from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi_cache import FastAPICache
+from fastapi_cache.backends.redis import RedisBackend
+from redis import asyncio as aioredis
 
 from db.database import async_session
 from db import tables
@@ -21,7 +24,7 @@ def create_ip_ports_array(ip: str, *ports):
 app = FastAPI(
     title="Georeport MDGT",
     description="Сервис аутентификации протоколов испытаний",
-    version="2.1.2")
+    version="2.2.0")
 
 origins = [
     "http://localhost:3000",
@@ -44,6 +47,8 @@ async def index():
 
 @app.on_event("startup")
 async def startup_event():
+    redis = aioredis.from_url("redis://localhost", encoding="utf8", decode_responses=True)
+    FastAPICache.init(RedisBackend(redis), prefix="fastapi-cache")
     async with engine.begin() as conn:
         #await conn.run_sync(Base.metadata.drop_all)
         await conn.run_sync(Base.metadata.create_all)
