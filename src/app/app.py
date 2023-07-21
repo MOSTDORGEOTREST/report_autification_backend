@@ -25,6 +25,7 @@ app = FastAPI(
 
 origins = [
     "http://localhost:3000",
+    "http://localhost:9574",
     "http://localhost:8080"]
 
 origins += create_ip_ports_array(configs.host_ip, 3000, 8000, 80)
