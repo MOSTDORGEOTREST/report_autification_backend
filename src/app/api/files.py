@@ -46,7 +46,6 @@ async def upload_file(
 @router.get("/", response_model=Optional[List[File]])
 async def get_files(
         report_id: str,
-        user: User = Depends(get_current_user),
         service: ReportsService = Depends(get_report_service)
 ):
     """Просмотр отчетов по объекту"""
