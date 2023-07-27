@@ -82,7 +82,7 @@ async def create_report_and_qr(
     text = f"https://georeport.ru/reports/?id={id}"
     path_to_download = os.path.join("services", "digitrock_qr.png")  # Путь до фона qr кода
 
-    await service.update(id=id, report_data=report_data)
+    await service.create(report_id=id, user_id=user.id, report_data=report_data)
 
     file = gen_qr_code(text, path_to_download)
     return StreamingResponse(file, media_type="image/png")
