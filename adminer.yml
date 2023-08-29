@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  db:
+    image: adminer
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_NAME}
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    expose:
+      - 8080
+    ports:
+      - "8080:8080"
+    restart: always
+
