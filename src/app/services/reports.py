@@ -12,7 +12,7 @@ from sqlalchemy.sql import extract
 #import pickle
 
 from models.reports import Report, ReportCreate, ReportUpdate
-from models.files import FileCreate, FileBase, TestTypeFiles, TestTypeFilesCreate
+from models.files import FileCreate, FileBase, TestTypeFile, TestTypeFileCreate
 from services.qr_generator import gen_qr_code
 import db.tables as tables
 from modules.exceptions import exception_not_found, exception_file
