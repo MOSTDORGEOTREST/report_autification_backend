@@ -5,6 +5,7 @@ from typing import Optional, List
 import hashlib
 import os
 from fastapi_cache.decorator import cache
+from fastapi.concurrency import run_in_threadpool
 
 from services.qr_generator import gen_qr_code
 from models.reports import Report, ReportCreate, ReportUpdate
@@ -45,7 +46,7 @@ async def create_report(
     return await service.create(report_id=id, user_id=user.id, report_data=report_data)
 
 @router.post("/qr/")
-def create_qr(
+async def create_qr(
         id: str, user:
         User = Depends(get_current_user)
 ):
@@ -55,8 +56,7 @@ def create_qr(
 
     text = f"https://georeport.ru/reports/?id={id}"
     path_to_download = os.path.join("services", "digitrock_qr.png")  # Путь до фона qr кода
-    file = gen_qr_code(text, path_to_download)
-
+    file = await run_in_threadpool(gen_qr_code, text, path_to_download)
     return StreamingResponse(file, media_type="image/png")
 
 @router.post("/report_and_qr/")
@@ -84,7 +84,8 @@ async def create_report_and_qr(
 
     await service.create(report_id=id, user_id=user.id, report_data=report_data)
 
-    file = gen_qr_code(text, path_to_download)
+    file = await run_in_threadpool(gen_qr_code, text, path_to_download)
+
     return StreamingResponse(file, media_type="image/png")
 
 @router.put("/", response_model=ReportUpdate)
