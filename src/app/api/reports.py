@@ -6,6 +6,9 @@ import hashlib
 import os
 from fastapi_cache.decorator import cache
 from fastapi.concurrency import run_in_threadpool
+import concurrent
+import functools
+import asyncio
 
 from services.qr_generator import gen_qr_code
 from models.reports import Report, ReportCreate, ReportUpdate
@@ -56,7 +59,13 @@ async def create_qr(
 
     text = f"https://georeport.ru/reports/?id={id}"
     path_to_download = os.path.join("services", "digitrock_qr.png")  # Путь до фона qr кода
+
+    #loop = asyncio.get_event_loop()
+    #with concurrent.futures.ProcessPoolExecutor() as pool:
+        #file = await loop.run_in_executor(pool, functools.partial(gen_qr_code, text, path_to_download))
+
     file = await run_in_threadpool(gen_qr_code, text, path_to_download)
+
     return StreamingResponse(file, media_type="image/png")
 
 @router.post("/report_and_qr/")
