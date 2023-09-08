@@ -15,8 +15,8 @@ from models.reports import Report, ReportCreate, ReportUpdate
 from models.files import FileCreate, FileBase, TestTypeFile, TestTypeFileCreate
 from services.qr_generator import gen_qr_code
 import db.tables as tables
-from modules.exceptions import exception_not_found, exception_file
-from modules.s3 import s3
+from modules.exceptions import exception_not_found
+from config import configs
 
 _t = humanize.i18n.activate("ru_RU")
 
@@ -230,18 +230,9 @@ class ReportsService:
 
         return files
 
-    async def create_file(self, report_id: str, filename: str, file: bytes) -> tables.Files:
-
-        filename = filename.replace(' ', '_')
-
-        try:
-            s3.put_object(data=file, key=f"georeport/files/{report_id}-{filename}")
-        except Exception as err:
-            print(err)
-            raise exception_file
-
+    async def create_file(self, report_id: str, filename: str) -> tables.Files:
         file = tables.Files(
-            link=f"https://s3.timeweb.com/cw78444-3db3e634-248a-495a-8c38-9f7322725c84/georeport/files/{report_id}-{filename}",
+            link=f"{configs.endpoint_url}/{configs.bucket}/georeport/files/{report_id}-{filename}",
             report_id=report_id,
             filename=filename
         )
@@ -268,23 +259,17 @@ class ReportsService:
         if not files:
             return
 
-        for file in files:
-            try:
-                s3.delete_object(f"georeport/files/{report_id}-{file.filename}")
-            except Exception as err:
-                print(err)
-
         q = delete(tables.Files).where(tables.Files.report_id == report_id)
         q.execution_options(synchronize_session="fetch")
         await self.session.execute(q)
         await self.session.commit()
+        return files
 
     async def delete_file(self, file_id: int):
         q = delete(tables.Files).where(tables.Files.report_id == file_id)
         q.execution_options(synchronize_session="fetch")
         await self.session.execute(q)
         await self.session.commit()
-
 
     async def get_test_type_files(self, test_type: str, user_id: int) -> Optional[tables.TestTypeFiles]:
         test_type = test_type.replace(' ', '_')
@@ -302,19 +287,9 @@ class ReportsService:
 
         return files
 
-    async def create_test_type_files(self, user_id: int, test_type: str, filename: str, file: bytes) -> tables.TestTypeFiles:
-
-        filename = filename.replace(' ', '_')
-        test_type = test_type.replace(' ', '_')
-
-        try:
-            s3.put_object(data=file, key=f"georeport/test_type_files/{user_id}-{test_type}-{filename}")
-        except Exception as err:
-            print(err)
-            raise exception_file
-
+    async def create_test_type_files(self, user_id: int, test_type: str, filename: str) -> tables.TestTypeFiles:
         file = tables.TestTypeFiles(
-            link=f"https://s3.timeweb.com/cw78444-3db3e634-248a-495a-8c38-9f7322725c84/georeport/test_type_files/{user_id}-{test_type}-{filename}",
+            link=f"{configs.endpoint_url}/{configs.bucket}/georeport/test_type_files/{user_id}-{test_type}-{filename}",
             test_type=test_type,
             user_id=user_id,
             filename=filename
@@ -338,12 +313,6 @@ class ReportsService:
         if not files:
             return
 
-        for file in files:
-            try:
-                s3.delete_object(f"georeport/test_type_files/{user_id}-{test_type}-{file.filename}")
-            except Exception as err:
-                print(err)
-
         q = delete(tables.TestTypeFiles).where(
             tables.TestTypeFiles.test_type == test_type,
             tables.TestTypeFiles.user_id == user_id,
@@ -351,4 +320,6 @@ class ReportsService:
         q.execution_options(synchronize_session="fetch")
         await self.session.execute(q)
         await self.session.commit()
+
+        return files
 
