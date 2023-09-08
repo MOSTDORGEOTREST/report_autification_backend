@@ -51,20 +51,14 @@ async def create_report(
 @router.post("/qr/")
 async def create_qr(
         id: str, user:
-        User = Depends(get_current_user)
+        User = Depends(get_current_user),
+        service: ReportsService = Depends(get_report_service)
 ):
     """Создание qr"""
     if not user.active:
         raise exception_active
 
-    text = f"https://georeport.ru/reports/?id={id}"
-    path_to_download = os.path.join("services", "digitrock_qr.png")  # Путь до фона qr кода
-
-    #loop = asyncio.get_event_loop()
-    #with concurrent.futures.ProcessPoolExecutor() as pool:
-        #file = await loop.run_in_executor(pool, functools.partial(gen_qr_code, text, path_to_download))
-
-    file = await run_in_threadpool(gen_qr_code, text, path_to_download)
+    file = await service.create_qr(id)
 
     return StreamingResponse(file, media_type="image/png")
 
@@ -88,12 +82,8 @@ async def create_report_and_qr(
 
     id = hashlib.sha1(
         f"{report_data.object_number} {report_data.laboratory_number} {report_data.test_type} {user.id}".encode("utf-8")).hexdigest()
-    text = f"https://georeport.ru/reports/?id={id}"
-    path_to_download = os.path.join("services", "digitrock_qr.png")  # Путь до фона qr кода
 
-    await service.create(report_id=id, user_id=user.id, report_data=report_data)
-
-    file = await run_in_threadpool(gen_qr_code, text, path_to_download)
+    file = await service.create_qr(id)
 
     return StreamingResponse(file, media_type="image/png")
 

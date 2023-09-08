@@ -209,17 +209,14 @@ class ReportsService:
             datetime=datetime.datetime.now(),
             user_id=user_id)
 
-    async def create_qr(self, user_id: str, laboratory_number: str, test_type: str,
-                     report_data: ReportCreate):
+    async def create_qr(self, id: str):
 
-        report = await self.create(user_id, laboratory_number, test_type, report_data)
+        text = f"https://georeport.ru/reports/?id={id}"
+        path_to_download = os.path.join("services", "digitrock_qr.png")  # Путь до фона qr кода
 
-        text = f"https://georeport.ru/report/?id={report.id}"
-
-        path_to_download = os.path.join("static/images", "digitrock_qr.png")  # Путь до фона qr кода
-
-        return gen_qr_code(text, path_to_download)
-
+        loop = asyncio.get_event_loop()
+        with concurrent.futures.ProcessPoolExecutor() as pool:
+            return await loop.run_in_executor(pool, functools.partial(gen_qr_code, text, path_to_download))
 
     async def get_files(self, report_id: str) -> Optional[tables.Files]:
         files = await self.session.execute(
