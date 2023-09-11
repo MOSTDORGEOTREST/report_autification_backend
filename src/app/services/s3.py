@@ -16,3 +16,9 @@ class S3Service:
             Bucket=configs.bucket,
             Key=key
         )
+
+    async def get(self, key: str):
+        return await self.client.get_object(
+            Bucket=configs.bucket,
+            Key=key
+        )
