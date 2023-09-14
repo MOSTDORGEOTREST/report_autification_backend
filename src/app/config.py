@@ -25,6 +25,6 @@ class Configs_docker_compose(BaseSettings):
     region_name: str = Field(..., env='AWS_REGION')
     bucket: str = Field(..., env='AWS_BUCKET')
     file_count: int = Field(..., env='FILE_COUNT')
-    file_size: str = Field(..., env='FILE_SIZE')
+    file_size: int = Field(..., env='FILE_SIZE')
 
 configs = Configs_docker_compose()

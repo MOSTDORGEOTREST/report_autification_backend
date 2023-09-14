@@ -24,21 +24,23 @@ def create_ip_ports_array(ip: str, *ports):
 app = FastAPI(
     title="Georeport MDGT",
     description="Сервис аутентификации протоколов испытаний",
-    version="2.2.0")
+    version="2.4.1")
 
 origins = [
     "http://localhost:3000",
-    "http://localhost:9574",
-    "http://localhost:8080"]
+    "http://localhost:8080",
+    "http://localhost:9573"]
 
-origins += create_ip_ports_array(configs.host_ip, 3000, 8000, 80)
+origins += create_ip_ports_array(configs.host_ip, 3000, 8000, 80, 9573)
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"])
+    allow_methods=["GET", "POST", "OPTIONS", "DELETE", "PATCH", "PUT"],
+    allow_headers=["Content-Type", "Set-Cookie", "Access-Control-Allow-Headers", "Access-Control-Allow-Origin",
+                   "Authorization", "Accept", "X-Requested-With"],
+)
 
 app.include_router(router)
 
@@ -48,8 +50,9 @@ async def index():
 
 @app.on_event("startup")
 async def startup_event():
-    redis = aioredis.from_url("redis://localhost", encoding="utf8", decode_responses=True)
+    redis = aioredis.from_url("redis://localhost:6379", encoding="utf8", decode_responses=True)
     FastAPICache.init(RedisBackend(redis), prefix="fastapi-cache")
+
     async with engine.begin() as conn:
         #await conn.run_sync(Base.metadata.drop_all)
         await conn.run_sync(Base.metadata.create_all)
