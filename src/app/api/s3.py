@@ -18,4 +18,6 @@ async def get(
 ):
     '''Получение файлов'''
     file =  await s3_service.get(key)
-    return StreamingResponse(file["Body"], media_type="application/pdf")
+    #['ResponseMetadata', 'AcceptRanges', 'LastModified', 'ContentLength', 'ETag', 'CacheControl', 'ContentType',
+    # 'Expires', 'Metadata', 'Body']
+    return StreamingResponse(file["Body"], media_type=file['ContentType'])
