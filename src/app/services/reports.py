@@ -232,7 +232,7 @@ class ReportsService:
 
     async def create_file(self, report_id: str, filename: str) -> tables.Files:
         file = tables.Files(
-            link=f"/georeport/files/{report_id}-{filename}",
+            link=f"georeport/files/{report_id}-{filename}",
             report_id=report_id,
             filename=filename
         )
