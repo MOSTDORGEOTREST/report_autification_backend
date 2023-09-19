@@ -4,15 +4,11 @@ services:
      restart: always
      image: nginx
      volumes:
-      - ./src/app/key.key:/etc/ssl/key.key
-      - ./src/app/crt.crt:/etc/ssl/crt.crt
-      - ./src/server/conf.d:/etc/nginx/conf.d
-      - ./src/app:/app
+      - ./server/conf.d:/etc/nginx/conf.d
      links:
       - web:web
      ports:
       - "80:80"
-      - "443:443"
 
   redis:
     image: "redis:alpine"
