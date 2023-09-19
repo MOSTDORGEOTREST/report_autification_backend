@@ -289,7 +289,7 @@ class ReportsService:
 
     async def create_test_type_files(self, user_id: int, test_type: str, filename: str) -> tables.TestTypeFiles:
         file = tables.TestTypeFiles(
-            link=f"/georeport/test_type_files/{user_id}-{test_type}-{filename}",
+            link=f"georeport/test_type_files/{user_id}-{test_type}-{filename}",
             test_type=test_type,
             user_id=user_id,
             filename=filename
