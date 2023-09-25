@@ -21,7 +21,7 @@ services:
       - REDIS_REPLICATION_MODE=master
 
   web:
-    build: ./srс
+    context: ./src/
     dockerfile: Dockerfile
     command: bash -c 'uvicorn main:app --host 0.0.0.0'
     environment:
