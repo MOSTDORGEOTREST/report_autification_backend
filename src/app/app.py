@@ -26,14 +26,20 @@ app = FastAPI(
     description="Сервис аутентификации протоколов испытаний",
     version="2.4.1")
 
-origins = ['*']
+
+origins = [
+    "http://localhost:3000",
+    "http://localhost:8080"]
+
+origins += create_ip_ports_array(configs.host_ip, 3000, 8000, 80)
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
-    #allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_credentials=True,
+    allow_methods=["GET", "POST", "OPTIONS", "DELETE", "PATCH", "PUT"],
+    allow_headers=["Content-Type", "Set-Cookie", "Access-Control-Allow-Headers", "Access-Control-Allow-Origin",
+                   "Authorization", "Accept", "X-Requested-With"],
 )
 
 app.include_router(router)
