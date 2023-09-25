@@ -40,7 +40,6 @@ async def sign_up(
 async def sign_in(
         auth_data: OAuth2PasswordRequestForm = Depends(),
         auth_service: UsersService = Depends(get_users_service),
-        response: Response,
 ):
     """Получение токена (токен зранится в куки)"""
     response.set_cookie(
