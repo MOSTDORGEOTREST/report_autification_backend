@@ -1,6 +1,6 @@
 import datetime
 from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
+from starlette.middleware.cors import CORSMiddleware
 from passlib.hash import bcrypt
 from sqlalchemy.future import select
 from fastapi.responses import HTMLResponse, JSONResponse
@@ -38,11 +38,10 @@ origins += create_ip_ports_array(configs.host_ip, 3000, 8000, 80, 9573)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=["*"],
     allow_credentials=True,
-    allow_methods=["GET", "POST", "OPTIONS", "DELETE", "PATCH", "PUT"],
-    allow_headers=["Content-Type", "Set-Cookie", "Access-Control-Allow-Headers", "Access-Control-Allow-Origin",
-                   "Authorization", "Accept", "X-Requested-With"],
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 app.include_router(router)
