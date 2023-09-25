@@ -1,15 +1,5 @@
 version: '3.3'
 services:
-  server:
-     restart: always
-     image: nginx
-     volumes:
-      - ./server/conf.d:/etc/nginx/conf.d
-     links:
-      - web:web
-     ports:
-      - "80:80"
-
   redis:
     image: "redis:alpine"
     expose:
@@ -37,7 +27,7 @@ services:
       - AWS_REGION=${AWS_REGION}
       - AWS_BUCKET=${AWS_BUCKET}
     ports:
-      - 8555:8000
+      - 80:8000
     restart: always
     volumes:
       - /etc/timezone:/etc/timezone:ro
