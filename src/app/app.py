@@ -29,9 +29,10 @@ app = FastAPI(
 
 origins = [
     "http://localhost:3000",
-    "http://localhost:8080"]
+    "http://localhost:8080",
+    "http://localhost:9573"]
 
-origins += create_ip_ports_array(configs.host_ip, 3000, 8000, 80)
+origins += create_ip_ports_array(configs.host_ip, 3000, 8000, 80, 9573)
 
 app.add_middleware(
     CORSMiddleware,
