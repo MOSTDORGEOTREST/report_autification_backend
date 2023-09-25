@@ -39,25 +39,13 @@ async def sign_up(
 @router.post('/sign-in/')
 async def sign_in(
         auth_data: OAuth2PasswordRequestForm = Depends(),
-        auth_service: UsersService = Depends(get_users_service),
+        auth_service: UsersService = Depends(get_users_service)
 ):
     """Получение токена (токен зранится в куки)"""
-    response.set_cookie(
-        secure=True,
-        samesite=None,  # bug -> doesn't work, need to set it manually (below)
-    )
     token = await auth_service.authenticate_user(auth_data.username, auth_data.password)
     content = {"message": "True"}
     response = JSONResponse(content=content)
     response.set_cookie("Authorization", value=f"Bearer {token.access_token}", httponly=True)
-
-    for idx, header in enumerate(response.raw_headers):
-        if header[0].decode("utf-8") == "set-cookie":
-            cookie = header[1].decode("utf-8")
-            if "SameSite=None" not in cookie:
-                cookie = cookie + "; SameSite=None"
-                response.raw_headers[idx] = (header[0], cookie.encode())
-
     return response
 
 @router.post('/token/', response_model=Token)
