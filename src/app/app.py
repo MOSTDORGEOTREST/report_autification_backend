@@ -1,5 +1,5 @@
 import datetime
-from fastapi import FastAPI
+from fastapi import FastAPI, Response, Request
 from starlette.middleware.cors import CORSMiddleware
 from passlib.hash import bcrypt
 from sqlalchemy.future import select
@@ -29,12 +29,17 @@ app = FastAPI(
 
 origins = [
     "37.139.85.41",
-    "37.139.85.41:9573",
-    "http://localhost:3000",
-    "http://localhost:8080",
-    "http://localhost:9573"]
+    "37.139.85.41:9573"]
 
 origins += create_ip_ports_array(configs.host_ip, 3000, 8000, 80, 9573)
+
+@app.middleware("http")
+async def add_process_time_header(request: Request, call_next):
+    response = await call_next(request)
+    response.headers["httponly"] = 'true'
+    response.headers["secure"] = 'true'
+    response.headers["samesite"] = 'none'
+    return response
 
 app.add_middleware(
     CORSMiddleware,
@@ -46,6 +51,7 @@ app.add_middleware(
 )
 
 app.include_router(router)
+
 
 @app.get("/", response_class=HTMLResponse)
 async def index():
