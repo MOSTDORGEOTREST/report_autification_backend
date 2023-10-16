@@ -29,7 +29,13 @@ app = FastAPI(
 
 origins = [
     "37.139.85.41",
-    "37.139.85.41:9573"]
+    "37.139.85.41:9573",
+    "http://localhost:3000",
+    "http://localhost:8000"
+    "http://localhost"
+    "http://localhost:80",
+    "http://localhost:9573"
+]
 
 origins += create_ip_ports_array(configs.host_ip, 3000, 8000, 80, 9573)
 
