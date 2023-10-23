@@ -39,13 +39,13 @@ origins = [
 
 origins += create_ip_ports_array(configs.host_ip, 3000, 8000, 80, 9573)
 
-@app.middleware("http")
-async def add_process_time_header(request: Request, call_next):
-    response = await call_next(request)
-    response.headers["httponly"] = 'true'
-    response.headers["secure"] = 'true'
-    response.headers["samesite"] = 'none'
-    return response
+#@app.middleware("http")
+#async def add_process_time_header(request: Request, call_next):
+#    response = await call_next(request)
+#    response.headers["httponly"] = 'true'
+#    response.headers["secure"] = 'true'
+#    response.headers["samesite"] = 'none'
+#    return response
 
 app.add_middleware(
     CORSMiddleware,
