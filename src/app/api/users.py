@@ -45,7 +45,7 @@ async def sign_in(
     token = await auth_service.authenticate_user(auth_data.username, auth_data.password)
     content = {"message": "True"}
     response = JSONResponse(content=content)
-    response.set_cookie("Authorization", value=f"Bearer {token.access_token}", httponly=True, secure=True, samesite='none')
+    response.set_cookie("Authorization", value=f"Bearer {token.access_token}")#, httponly=True, secure=True, samesite='none')
     return response
 
 @router.post('/token/', response_model=Token)
