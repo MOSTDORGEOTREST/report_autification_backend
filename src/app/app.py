@@ -35,6 +35,9 @@ origins = [
     "http://localhost"
     "http://localhost:80",
     "http://localhost:9573"
+    "http://89.223.65.190",
+    "http://89.223.65.190:80",
+    "http://89.223.65.190:3000",
 ]
 
 origins += create_ip_ports_array(configs.host_ip, 3000, 8000, 80, 9573)
@@ -49,11 +52,11 @@ origins += create_ip_ports_array(configs.host_ip, 3000, 8000, 80, 9573)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"], #origins,
+    allow_origins=origins,
     allow_credentials=True,
-    allow_methods=["*"],#["GET", "POST", "OPTIONS", "DELETE", "PATCH", "PUT"],
-    allow_headers=["*"],#["Content-Type", "Set-Cookie", "Access-Control-Allow-Headers", "Access-Control-Allow-Origin",
-                   #"Authorization", "Accept", "X-Requested-With"],
+    allow_methods=["GET", "POST", "OPTIONS", "DELETE", "PATCH", "PUT"],
+    allow_headers=["Content-Type", "Set-Cookie", "Access-Control-Allow-Headers", "Access-Control-Allow-Origin",
+                   "Authorization", "Accept", "X-Requested-With"],
 )
 #["*"],#
 app.include_router(router)
