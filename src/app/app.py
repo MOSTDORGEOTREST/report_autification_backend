@@ -24,7 +24,7 @@ def create_ip_ports_array(ip: str, *ports):
 app = FastAPI(
     title="Georeport MDGT",
     description="Сервис аутентификации протоколов испытаний",
-    version="2.4.1")
+    version="2.0.0")
 
 
 origins = []
@@ -42,15 +42,33 @@ origins += create_ip_ports_array('http://37.139.85.41', 3000, 8000, 80, 9573)
 #    response.headers["samesite"] = 'none'
 #    return response
 
+allow_methods = [
+    "GET",
+    "POST",
+    "OPTIONS",
+    "DELETE",
+    "PATCH",
+    "PUT"
+]
+
+allow_headers = [
+    "Content-Type",
+    "Set-Cookie",
+    "Access-Control-Allow-Headers",
+    "Access-Control-Allow-Origin",
+    "Authorization",
+    "Accept",
+    "X-Requested-With"
+]
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
     allow_credentials=True,
-    allow_methods=["GET", "POST", "OPTIONS", "DELETE", "PATCH", "PUT"],
-    allow_headers=["Content-Type", "Set-Cookie", "Access-Control-Allow-Headers", "Access-Control-Allow-Origin",
-                   "Authorization", "Accept", "X-Requested-With"],
+    allow_methods=allow_methods,
+    allow_headers=allow_headers,
 )
-#["*"],#
+
 app.include_router(router)
 
 
