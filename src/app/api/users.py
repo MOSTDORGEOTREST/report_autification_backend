@@ -43,9 +43,10 @@ async def sign_in(
 ):
     """Получение токена (токен зранится в куки)"""
     token = await auth_service.authenticate_user(auth_data.username, auth_data.password)
-    content = {"message": "True"}
+    content = {"message": "successfully"}
     response = JSONResponse(content=content)
     response.set_cookie("Authorization", value=f"Bearer {token.access_token}")#, httponly=True, secure=True, samesite='none')
+    response.headers["Access-Control-Allow-Credentials"] = "true"
     return response
 
 @router.post('/token/', response_model=Token)
