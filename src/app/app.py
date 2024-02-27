@@ -33,6 +33,7 @@ origins += create_ip_ports_array(configs.host_ip, 3000, 8000, 80, 9573)
 origins += create_ip_ports_array('http://localhost', 3000, 8000, 80, 9573)
 origins += create_ip_ports_array('http://89.223.65.190', 3000, 8000, 80, 9573)
 origins += create_ip_ports_array('http://37.139.85.41', 3000, 8000, 80, 9573)
+origins += create_ip_ports_array("192.168.176.1", 3000, 8000, 80, 9573)
 
 #@app.middleware("http")
 #async def add_process_time_header(request: Request, call_next):
@@ -61,20 +62,12 @@ allow_headers = [
     "X-Requested-With"
 ]
 
-#app.add_middleware(
-#    CORSMiddleware,
-#    allow_origins=origins,
-#    allow_credentials=True,
-#    allow_methods=allow_methods,
-#    allow_headers=allow_headers,
-#)
-
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=origins,
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=allow_methods,
+    allow_headers=allow_headers,
 )
 
 app.include_router(router)
