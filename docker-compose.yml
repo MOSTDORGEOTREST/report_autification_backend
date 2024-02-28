@@ -37,3 +37,11 @@ services:
     depends_on:
       - redis
 
+  server:
+    restart: always
+    image: nginx
+    volumes:
+      - ./server/conf.d:/etc/nginx/conf.d
+    ports:
+      - "80:80"
+
