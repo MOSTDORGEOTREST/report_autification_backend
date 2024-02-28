@@ -36,7 +36,7 @@ async def sign_up(
         raise exception_right
     return await auth_service.register_new_user(user_data)
 
-@router.post('/sign-in')
+@router.post('/sign-in/')
 async def sign_in(
         auth_data: OAuth2PasswordRequestForm = Depends(),
         auth_service: UsersService = Depends(get_users_service)
@@ -49,7 +49,7 @@ async def sign_in(
     response.headers["Access-Control-Allow-Credentials"] = "true"
     return response
 
-@router.post('/token', response_model=Token)
+@router.post('/token/', response_model=Token)
 async def get_token(
         user: User = Depends(get_current_user),
         auth_service: UsersService = Depends(get_users_service)
@@ -60,14 +60,14 @@ async def get_token(
     else:
         raise exception_right
 
-@router.get('/user', response_model=User)
+@router.get('/user/', response_model=User)
 async def get_user(
         user: User = Depends(get_current_user)
 ):
     """Просмотр авторизованного пользователя"""
     return user
 
-@router.get("/sign-out")
+@router.get("/sign-out/")
 async def sign_out_and_remove_cookie(
         current_user: User = Depends(get_current_user)
 ):
