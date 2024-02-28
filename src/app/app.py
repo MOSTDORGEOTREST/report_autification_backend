@@ -32,7 +32,15 @@ origins = []
 origins += create_ip_ports_array(configs.host_ip, 3000, 8000, 80, 9573)
 origins += create_ip_ports_array("http://localhost", 3000, 8000, 80, 9573)
 origins += create_ip_ports_array("http://188.225.47.38", 3000, 8000, 80, 9573)
+origins += create_ip_ports_array("https://188.225.47.38", 3000, 8000, 80, 9573)
 origins += create_ip_ports_array("188.225.47.38", 3000, 8000, 80, 9573)
+
+origins = [
+    "http://localhost",
+    "http://188.225.47.38",
+    "https://188.225.47.38",
+    "188.225.47.38"
+]
 
 #@app.middleware("http")
 #async def add_process_time_header(request: Request, call_next):
