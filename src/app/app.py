@@ -64,10 +64,10 @@ allow_headers = [
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["'37.139.85.41'"],
+    allow_origins=['http://localhost', 'http://localhost:3000', '37.139.85.41', 'http://37.139.85.41', 'https://37.139.85.41'],
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=allow_methods,
+    allow_headers=allow_headers,
 )
 
 #@app.middleware("http")
