@@ -70,14 +70,14 @@ app.add_middleware(
     allow_headers=allow_headers,
 )
 
-#@app.middleware("http")
-#async def log_incoming_request(request: Request, call_next):
-#    headers = request.headers
-#    authorization_header = headers.get("Authorization")
-#    print(f"Incoming request headers: {headers}")
-#    print(f"Authorization header: {authorization_header}")
-#    response = await call_next(request)
-#    return response
+@app.middleware("http")
+async def log_incoming_request(request: Request, call_next):
+    response = await call_next(request)
+    headers = request.headers
+    authorization_header = headers.get("Authorization")
+    print(f"Incoming request headers: {headers}")
+    print(f"Authorization header: {authorization_header}")
+    return response
 
 app.include_router(router)
 
