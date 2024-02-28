@@ -64,7 +64,7 @@ allow_headers = [
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["'37.139.85.41'"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
