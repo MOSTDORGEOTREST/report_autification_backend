@@ -1,4 +1,4 @@
-from fastapi import Depends, Response, status, UploadFile
+from fastapi import APIRouter, Depends, Response, status, UploadFile
 from typing import Optional, List
 import sys
 
@@ -10,7 +10,6 @@ from services.reports import ReportsService
 from services.s3 import S3Service
 from config import configs
 from modules.exceptions import exception_right, exception_file_count, exception_file_size
-from modules.api_router import APIRouter
 
 router = APIRouter(
     prefix="/test_type_files",

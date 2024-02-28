@@ -1,8 +1,7 @@
-from fastapi import Depends, Response, status, UploadFile
+from fastapi import APIRouter, Depends, Response, status, UploadFile
 from typing import Optional, List
 import sys
 
-from modules.api_router import APIRouter
 from models.files import File
 from models.users import User, LicenseLevel
 from services.users import get_current_user

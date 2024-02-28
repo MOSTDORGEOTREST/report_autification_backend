@@ -1,4 +1,4 @@
-from fastapi import Depends, status, Response
+from fastapi import APIRouter, Depends, status, Response
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi.responses import JSONResponse
 from typing import List
@@ -9,7 +9,6 @@ from services.depends import get_report_service
 from services.reports import ReportsService
 from services.depends import get_users_service
 from modules.exceptions import exception_right
-from modules.api_router import APIRouter
 
 router = APIRouter(
     prefix='/auth',

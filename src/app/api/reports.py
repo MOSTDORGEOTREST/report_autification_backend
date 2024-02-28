@@ -1,4 +1,4 @@
-from fastapi import Depends, Response, status, HTTPException
+from fastapi import APIRouter, Depends, Response, status, HTTPException
 from fastapi.responses import StreamingResponse
 from datetime import date
 from typing import Optional, List
@@ -10,7 +10,6 @@ import concurrent
 import functools
 import asyncio
 
-from modules.api_router import APIRouter
 from services.qr_generator import gen_qr_code
 from models.reports import Report, ReportCreate, ReportUpdate
 from models.users import User

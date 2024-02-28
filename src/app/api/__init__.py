@@ -1,4 +1,4 @@
-from modules.api_router import APIRouter
+from fastapi import APIRouter
 from api.reports import router as report_router
 from api.users import router as users_router
 from api.files import router as files_router

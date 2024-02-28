@@ -1,4 +1,4 @@
-from fastapi import Depends, Response, status, UploadFile
+from fastapi import APIRouter, Depends, Response, status, UploadFile
 from fastapi.responses import StreamingResponse
 from typing import Optional, List
 import sys
@@ -6,8 +6,6 @@ import sys
 from services.depends import get_s3_service
 from services.s3 import S3Service
 from config import configs
-from modules.api_router import APIRouter
-
 
 router = APIRouter(
     prefix="/s3",
