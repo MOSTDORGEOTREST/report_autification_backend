@@ -38,16 +38,15 @@ async def sign_up(
 
 @router.post('/sign-in/')
 async def sign_in(
+        response: Response,
         auth_data: OAuth2PasswordRequestForm = Depends(),
-        auth_service: UsersService = Depends(get_users_service)
+        auth_service: UsersService = Depends(get_users_service),
 ):
     """Получение токена (токен зранится в куки)"""
     token = await auth_service.authenticate_user(auth_data.username, auth_data.password)
-    content = {"message": "successfully"}
-    response = JSONResponse(content=content)
     response.set_cookie("Authorization", value=f"Bearer {token.access_token}", max_age=3600, secure=True, httponly=True, samesite="None")
     #response.headers["Access-Control-Allow-Credentials"] = "true"
-    return response
+    return {"message": "successfully"}
 
 @router.post('/token/', response_model=Token)
 async def get_token(
