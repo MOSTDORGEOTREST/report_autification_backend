@@ -1,4 +1,6 @@
 from config import configs
+import aiobotocore
+from modules.exceptions import exception_not_found_file
 
 class S3Service:
     def __init__(self, client):
@@ -17,7 +19,15 @@ class S3Service:
             Key=key
         )
 
+    async def check_file_exists(self, key):
+        try:
+            await self.client.head_object(Bucket=configs.bucket, Key=key)
+        except aiobotocore.exceptions.ClientError as e:
+            if e.response['Error']['Code'] == '404':
+                raise exception_not_found_file
+
     async def get(self, key: str):
+        await self.check_file_exists(key)
         return await self.client.get_object(
             Bucket=configs.bucket,
             Key=key

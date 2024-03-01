@@ -8,7 +8,6 @@ from services.users import get_current_user
 from services.depends import get_report_service, get_s3_service
 from services.reports import ReportsService
 from services.s3 import S3Service
-from config import configs
 from modules.exceptions import exception_right, exception_file_count, exception_file_size
 
 router = APIRouter(

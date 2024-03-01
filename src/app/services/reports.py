@@ -10,16 +10,13 @@ from sqlalchemy import update, delete, func
 from sqlalchemy.sql.expression import func as expression_func
 from sqlalchemy.orm import Session
 from sqlalchemy.dialects.postgresql import insert
-from sqlalchemy.sql import extract
 #import redis
 #import pickle
 
 from models.reports import Report, ReportCreate, ReportUpdate
-from models.files import FileCreate, FileBase, TestTypeFile, TestTypeFileCreate
 from services.qr_generator import gen_qr_code
 import db.tables as tables
 from modules.exceptions import exception_not_found
-from config import configs
 
 _t = humanize.i18n.activate("ru_RU")
 

@@ -64,3 +64,8 @@ exception_registration_data = HTTPException(
     detail="This name or mail or phone is already exist",
     headers={"WWW-Authenticate": "Bearer"},
 )
+
+exception_not_found_file = HTTPException(
+    status_code=status.HTTP_404_NOT_FOUND,
+    detail="This key doesn't exist",
+)
