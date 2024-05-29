@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, Response, status, HTTPException
+from fastapi import APIRouter, Depends, Response, status, HTTPException, Request
 from fastapi.responses import StreamingResponse
 from datetime import date
 from typing import Optional, List
@@ -15,7 +15,9 @@ from models.reports import Report, ReportCreate, ReportUpdate
 from models.users import User
 from services.users import get_current_user
 from services.depends import get_report_service
+from services.depends import get_statistics_service
 from services.reports import ReportsService
+from services.statistics import StatisticsService
 from modules.exceptions import exception_active, exception_license, exception_limit, exception_right
 
 router = APIRouter(
@@ -24,9 +26,21 @@ router = APIRouter(
 
 @router.get("/", response_model=Report)
 @cache(expire=60)
-async def get_report(id: str, service: ReportsService = Depends(get_report_service)):
+async def get_report(
+        id: str,
+        request: Request,
+        service: ReportsService = Depends(get_report_service),
+        stat_service: StatisticsService = Depends(get_statistics_service),
+):
     """Просмотр данных отчета по id"""
-    return await service.get(id)
+    report = await service.get(id)
+
+    if id != '4c795fb5002852b5af5df9e5de1e44b11b920d6f':
+        await stat_service.create(client_ip=request.headers.get("X-Real-IP") or request.client.host, report_id=id)
+
+    return report
+
+
 
 @router.post("/")
 async def create_report(
@@ -52,7 +66,8 @@ async def create_report(
 async def create_qr(
         id: str, user:
         User = Depends(get_current_user),
-        service: ReportsService = Depends(get_report_service)
+        service: ReportsService = Depends(get_report_service),
+        stat_service: ReportsService = Depends(get_statistics_service),
 ):
     """Создание qr"""
     if not user.active:
