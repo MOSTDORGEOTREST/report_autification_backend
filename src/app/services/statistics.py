@@ -32,6 +32,8 @@ class StatisticsService:
         if year:
             filters.append(extract('year', tables.Statistics.datetime) == year)
 
+        filters.append(tables.Reports.user_id == user_id)
+
         res = await self.session.execute(
             select(tables.Statistics).
             join(
@@ -39,8 +41,7 @@ class StatisticsService:
                 tables.Reports.id == tables.Statistics.report_id,
                 isouter=True
             ).
-            filter(*filters).
-            filters.append(tables.Reports.user_id == user_id).
+            filter_by(*filters).
             offset(offset).
             limit(limit)
         )
@@ -57,7 +58,7 @@ class StatisticsService:
         if year:
             filters.append(extract('year', tables.Statistics.datetime) == year)
 
-        filters.append(extract('year', tables.Statistics.datetime) == year)
+        filters.append(tables.Reports.user_id == user_id)
 
         res = await self.session.execute(
             select(
@@ -68,8 +69,7 @@ class StatisticsService:
                 tables.Reports.id == tables.Statistics.report_id,
                 isouter=True
             ).
-            filters.append(tables.Reports.user_id == user_id),
-            filter(*filters)
+            filter_by(*filters)
         )
         count = res.scalar_one()
 
