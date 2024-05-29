@@ -55,7 +55,7 @@ async def period_count(
     for i in range(months_diff + 1):
         date = datetime.date.today() - relativedelta(months=i)
         count = await service.count(user_id=User.id, month=date.month, year=date.year)
-        res[datetime.date(year=date.year, month=date.month, day=1)] = count
+        res[str(datetime.date(year=date.year, month=date.month, day=1))] = count
 
     return res
 
