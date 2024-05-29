@@ -24,7 +24,7 @@ class StatisticsService:
             raise exception_not_found
         return res
 
-    async def get_by_date(self, month: Optional[int] = None, year: Optional[int] = None, limit: Optional[int] = None, offset: Optional[int] = None) -> List[tables.Statistics]:
+    async def get_by_date(self, user_id: int, month: Optional[int] = None, year: Optional[int] = None, limit: Optional[int] = None, offset: Optional[int] = None) -> List[tables.Statistics]:
         filters = []
 
         if month:
@@ -34,7 +34,13 @@ class StatisticsService:
 
         res = await self.session.execute(
             select(tables.Statistics).
+            join(
+                tables.Reports,
+                tables.Reports.id == tables.Statistics.report_id,
+                isouter=True
+            ).
             filter(*filters).
+            filters.append(tables.Reports.user_id == user_id).
             offset(offset).
             limit(limit)
         )
@@ -43,7 +49,7 @@ class StatisticsService:
 
         return res
 
-    async def count(self, month: Optional[int] = None, year: Optional[int] = None) -> int:
+    async def count(self, user_id: int, month: Optional[int] = None, year: Optional[int] = None) -> int:
         filters = []
 
         if month:
@@ -51,8 +57,18 @@ class StatisticsService:
         if year:
             filters.append(extract('year', tables.Statistics.datetime) == year)
 
+        filters.append(extract('year', tables.Statistics.datetime) == year)
+
         res = await self.session.execute(
-            select(func.count(tables.Statistics.id)).
+            select(
+                func.count(tables.Statistics.id)
+            ).
+            join(
+                tables.Reports,
+                tables.Reports.id == tables.Statistics.report_id,
+                isouter=True
+            ).
+            filters.append(tables.Reports.user_id == user_id),
             filter(*filters)
         )
         count = res.scalar_one()
