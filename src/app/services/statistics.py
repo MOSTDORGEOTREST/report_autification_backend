@@ -41,7 +41,7 @@ class StatisticsService:
                 tables.Reports.id == tables.Statistics.report_id,
                 isouter=True
             ).
-            filter_by(*filters).
+            filter(*filters).
             offset(offset).
             limit(limit)
         )
@@ -69,7 +69,7 @@ class StatisticsService:
                 tables.Reports.id == tables.Statistics.report_id,
                 isouter=True
             ).
-            filter_by(*filters)
+            filter(*filters)
         )
         count = res.scalar_one()
 
