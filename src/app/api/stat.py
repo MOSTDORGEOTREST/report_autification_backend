@@ -57,7 +57,7 @@ async def period_count(
         count = await service.count(user_id=User.id, month=date.month, year=date.year)
         res[current_date] = count
 
-    return res[::-1]
+    return res
 
 
 
