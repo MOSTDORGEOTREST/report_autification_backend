@@ -34,8 +34,7 @@ class StatisticsService:
 
         res = await self.session.execute(
             select(tables.Statistics).
-            filter(extract('month', tables.works.date) == month).
-            filter(extract('year', tables.works.date) == year).
+            filter(*filters).
             offset(offset).
             limit(limit)
         )
