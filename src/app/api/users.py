@@ -44,7 +44,7 @@ async def sign_in(
 ):
     """Получение токена (токен зранится в куки)"""
     token = await auth_service.authenticate_user(auth_data.username, auth_data.password)
-    response.set_cookie("Authorization", value=f"Bearer {token.access_token}", httponly=True, secure=False, samesite='lax') #, max_age=3600, secure=True, httponly=True, samesite="None")
+    response.set_cookie("Authorization", value=f"Bearer {token.access_token}") #, httponly=True, secure=False, samesite='lax') #, max_age=3600, secure=True, httponly=True, samesite="None")
     #response.headers["Access-Control-Allow-Credentials"] = "true"
     return {"message": "successfully"}
 
